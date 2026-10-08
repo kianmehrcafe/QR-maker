@@ -1,0 +1,2085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR//FORGE</title>
+
+<!-- QR CODE STYLING LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.9.2/lib/qr-code-styling.min.js"></script>
+
+<style>
+:root{
+    --accent:#00eaff;
+    --accent2:#ff008c;
+    --bg:#05060b;
+    --panel:#0a0d14;
+    --panel2:#0d1119;
+    --border:#252d39;
+    --text:#f5f7fb;
+    --muted:#697487;
+    --danger:#ff4f73;
+    --success:#75ff9d;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    background:#030409;
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+body{
+    background:
+        radial-gradient(
+            circle at 18% 20%,
+            rgba(0,234,255,.08),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(255,0,140,.07),
+            transparent 28%
+        ),
+        #030409;
+}
+
+.grid{
+    position:fixed;
+    inset:-30%;
+    pointer-events:none;
+    background-image:
+        linear-gradient(
+            rgba(0,234,255,.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,234,255,.035) 1px,
+            transparent 1px
+        );
+    background-size:50px 50px;
+    transform:
+        perspective(500px)
+        rotateX(58deg);
+    transform-origin:center bottom;
+    animation:gridMove 6s linear infinite;
+}
+
+@keyframes gridMove{
+    from{
+        background-position:0 0;
+    }
+
+    to{
+        background-position:0 50px;
+    }
+}
+
+.glow{
+    position:fixed;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    filter:blur(110px);
+    pointer-events:none;
+    opacity:.08;
+}
+
+.glow.one{
+    background:var(--accent);
+    left:-170px;
+    top:20%;
+}
+
+.glow.two{
+    background:var(--accent2);
+    right:-170px;
+    bottom:-80px;
+}
+
+/* =========================================================
+   PARTICLES
+========================================================= */
+
+#particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+.particle{
+    position:absolute;
+    width:2px;
+    height:2px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+    animation:particleFloat linear infinite;
+}
+
+@keyframes particleFloat{
+    from{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+
+    15%{
+        opacity:.7;
+    }
+
+    85%{
+        opacity:.7;
+    }
+
+    to{
+        transform:translateY(-10vh);
+        opacity:0;
+    }
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:42px 20px 22px;
+}
+
+header h1{
+    font-size:clamp(34px,7vw,72px);
+    letter-spacing:10px;
+    text-shadow:
+        0 0 10px var(--accent),
+        0 0 26px var(--accent),
+        4px 4px 0 var(--accent2);
+}
+
+header p{
+    margin-top:8px;
+    color:var(--muted);
+    font-size:10px;
+    letter-spacing:5px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    position:relative;
+    z-index:2;
+    width:min(1200px,94vw);
+    margin:auto;
+    display:grid;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(320px,430px);
+    gap:20px;
+    padding-bottom:40px;
+}
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.panel{
+    border:1px solid var(--border);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.035),
+            rgba(255,255,255,.01)
+        );
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.25);
+    backdrop-filter:blur(14px);
+}
+
+.panel-title{
+    padding:16px 18px;
+    border-bottom:1px solid var(--border);
+    color:#8e99aa;
+    font-size:9px;
+    letter-spacing:3px;
+}
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+.controls{
+    padding:18px;
+}
+
+.group{
+    margin-bottom:19px;
+}
+
+.group:last-child{
+    margin-bottom:0;
+}
+
+.label{
+    display:block;
+    margin-bottom:8px;
+    color:#677283;
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+textarea{
+    width:100%;
+    min-height:120px;
+    resize:vertical;
+    padding:13px;
+    border:1px solid var(--border);
+    background:#05080d;
+    color:white;
+    outline:none;
+    font-size:13px;
+    line-height:1.5;
+}
+
+textarea:focus{
+    border-color:var(--accent);
+    box-shadow:
+        0 0 18px rgba(0,234,255,.08);
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.field{
+    width:100%;
+    padding:10px 11px;
+    border:1px solid var(--border);
+    background:#070a10;
+    color:#dbe2ed;
+    outline:none;
+}
+
+.field:focus{
+    border-color:var(--accent);
+}
+
+.color-row{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+}
+
+input[type="color"]{
+    width:45px;
+    height:38px;
+    padding:2px;
+    border:1px solid var(--border);
+    background:#080b11;
+    cursor:pointer;
+}
+
+input[type="range"]{
+    width:100%;
+    accent-color:var(--accent);
+}
+
+.range-row{
+    display:grid;
+    grid-template-columns:1fr 55px;
+    gap:10px;
+    align-items:center;
+}
+
+.range-value{
+    color:var(--accent);
+    text-align:right;
+    font-size:11px;
+}
+
+/* =========================================================
+   STYLE BUTTONS
+========================================================= */
+
+.style-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(3,1fr);
+    gap:7px;
+}
+
+.style-button{
+    padding:10px 6px;
+    min-height:56px;
+    border:1px solid var(--border);
+    background:#080c13;
+    color:#7d8796;
+    transition:.18s;
+}
+
+.style-button:hover{
+    color:var(--accent);
+    border-color:var(--accent);
+    transform:translateY(-2px);
+}
+
+.style-button.active{
+    color:var(--accent);
+    border-color:var(--accent);
+    box-shadow:
+        0 0 16px rgba(0,234,255,.08);
+}
+
+.style-preview{
+    height:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    margin-bottom:4px;
+}
+
+.mini-square{
+    width:5px;
+    height:5px;
+    background:currentColor;
+}
+
+.mini-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:currentColor;
+}
+
+.mini-rounded{
+    width:7px;
+    height:7px;
+    border-radius:3px;
+    background:currentColor;
+}
+
+.style-button small{
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   TOGGLE
+========================================================= */
+
+.toggle-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:12px;
+    border:1px solid var(--border);
+    background:#080c12;
+}
+
+.toggle-info strong{
+    display:block;
+    font-size:11px;
+}
+
+.toggle-info span{
+    display:block;
+    margin-top:4px;
+    color:#5f6a79;
+    font-size:9px;
+}
+
+.switch{
+    width:45px;
+    height:24px;
+    flex-shrink:0;
+    position:relative;
+    border:1px solid #36404c;
+    background:#0a0e14;
+    cursor:pointer;
+}
+
+.switch::after{
+    content:"";
+    position:absolute;
+    width:16px;
+    height:16px;
+    left:4px;
+    top:3px;
+    background:#596474;
+    transition:.2s;
+}
+
+.switch.on{
+    border-color:var(--accent);
+}
+
+.switch.on::after{
+    left:23px;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+}
+
+/* =========================================================
+   IMAGE UPLOAD
+========================================================= */
+
+.upload{
+    position:relative;
+    display:block;
+    padding:16px;
+    border:1px dashed #3b4654;
+    background:#080b11;
+    text-align:center;
+    color:#798493;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.upload:hover{
+    border-color:var(--accent);
+    color:var(--accent);
+    background:rgba(0,234,255,.03);
+}
+
+.upload strong{
+    display:block;
+    color:#c5ccd7;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+.upload span{
+    display:block;
+    margin-top:5px;
+    font-size:9px;
+}
+
+#imageInput{
+    display:none;
+}
+
+.image-actions{
+    display:flex;
+    gap:8px;
+    margin-top:8px;
+}
+
+.image-actions button{
+    flex:1;
+    padding:8px;
+    border:1px solid var(--border);
+    background:#080c12;
+    color:#7f8a99;
+}
+
+.image-actions button:hover{
+    border-color:var(--accent2);
+    color:var(--accent2);
+}
+
+/* =========================================================
+   PRESETS
+========================================================= */
+
+.presets{
+    display:grid;
+    grid-template-columns:
+        repeat(4,1fr);
+    gap:7px;
+}
+
+.preset{
+    height:38px;
+    border:1px solid var(--border);
+    background:#080c12;
+    cursor:pointer;
+    transition:.18s;
+}
+
+.preset:hover{
+    transform:translateY(-2px);
+    border-color:white;
+}
+
+/* =========================================================
+   PREVIEW
+========================================================= */
+
+.preview-panel{
+    min-height:100%;
+}
+
+.preview-area{
+    padding:22px;
+}
+
+.preview-box{
+    position:relative;
+    min-height:500px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:
+        radial-gradient(
+            circle,
+            rgba(0,234,255,.05),
+            transparent 65%
+        );
+    border:1px solid var(--border);
+}
+
+.preview-glow{
+    position:absolute;
+    width:330px;
+    height:330px;
+    border-radius:50%;
+    background:var(--accent);
+    filter:blur(80px);
+    opacity:.08;
+}
+
+#qrPreview{
+    position:relative;
+    z-index:2;
+    padding:20px;
+}
+
+#qrPreview canvas,
+#qrPreview svg{
+    display:block;
+    max-width:100%;
+    height:auto;
+}
+
+.preview-bottom{
+    margin-top:12px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+}
+
+.big-button{
+    min-height:50px;
+    border:1px solid var(--accent);
+    background:transparent;
+    color:var(--accent);
+    font-weight:bold;
+    letter-spacing:2px;
+    transition:.2s;
+}
+
+.big-button:hover{
+    background:var(--accent);
+    color:#000;
+    box-shadow:
+        0 0 25px rgba(0,234,255,.22);
+    transform:translateY(-2px);
+}
+
+.secondary-button{
+    min-height:50px;
+    border:1px solid var(--border);
+    background:#090d14;
+    color:#929cac;
+    font-weight:bold;
+    letter-spacing:2px;
+    transition:.2s;
+}
+
+.secondary-button:hover{
+    color:white;
+    border-color:#748094;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status{
+    margin-top:12px;
+    padding:12px;
+    border:1px solid var(--border);
+    background:#070a10;
+    color:#687485;
+    font-size:9px;
+    line-height:1.6;
+    text-align:center;
+}
+
+.status.ready{
+    color:var(--success);
+}
+
+.status.error{
+    color:var(--danger);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:0 20px 22px;
+    color:#444c59;
+    font-size:9px;
+    letter-spacing:4px;
+}
+
+footer span{
+    color:var(--accent);
+    text-shadow:0 0 10px var(--accent);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:900px){
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    .preview-panel{
+        min-height:unset;
+    }
+}
+
+@media(max-width:600px){
+
+    header{
+        padding-top:25px;
+    }
+
+    header h1{
+        letter-spacing:5px;
+    }
+
+    .style-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .presets{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .preview-box{
+        min-height:370px;
+    }
+
+    .preview-bottom{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="grid"></div>
+
+<div class="glow one"></div>
+<div class="glow two"></div>
+
+<div id="particles"></div>
+
+<header>
+
+    <h1>QR//FORGE</h1>
+
+    <p>
+        BUILD • STYLE • EXPORT
+    </p>
+
+</header>
+
+<main class="main">
+
+    <!-- =====================================================
+         CONTROLS
+    ====================================================== -->
+
+    <section class="panel">
+
+        <div class="panel-title">
+            QR CONFIGURATION
+        </div>
+
+        <div class="controls">
+
+            <!-- DATA -->
+
+            <div class="group">
+
+                <label class="label">
+                    TEXT OR URL
+                </label>
+
+                <textarea
+                    id="qrData"
+                    placeholder="https://example.com"
+                >https://kianmehr.github.io/</textarea>
+
+            </div>
+
+            <!-- COLORS -->
+
+            <div class="group">
+
+                <label class="label">
+                    COLORS
+                </label>
+
+                <div class="row">
+
+                    <div>
+
+                        <div class="color-row">
+
+                            <input
+                                class="field"
+                                id="qrColorText"
+                                value="#08080F"
+                            >
+
+                            <input
+                                type="color"
+                                id="qrColor"
+                                value="#08080F"
+                            >
+
+                        </div>
+
+                        <div
+                            style="
+                                margin-top:5px;
+                                color:#525f70;
+                                font-size:8px;
+                            "
+                        >
+                            QR COLOR
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="color-row">
+
+                            <input
+                                class="field"
+                                id="bgColorText"
+                                value="#FFFFFF"
+                            >
+
+                            <input
+                                type="color"
+                                id="bgColor"
+                                value="#FFFFFF"
+                            >
+
+                        </div>
+
+                        <div
+                            style="
+                                margin-top:5px;
+                                color:#525f70;
+                                font-size:8px;
+                            "
+                        >
+                            BACKGROUND
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- MODULE SHAPE -->
+
+            <div class="group">
+
+                <label class="label">
+                    QR MODULE MODEL
+                </label>
+
+                <div
+                    class="style-grid"
+                    id="dotStyles"
+                >
+
+                    <button
+                        class="style-button active"
+                        data-value="square"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-square"></span>
+                            <span class="mini-square"></span>
+                            <span class="mini-square"></span>
+                            <span class="mini-square"></span>
+                        </div>
+                        <small>SQUARE</small>
+                    </button>
+
+                    <button
+                        class="style-button"
+                        data-value="dots"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-dot"></span>
+                            <span class="mini-dot"></span>
+                            <span class="mini-dot"></span>
+                            <span class="mini-dot"></span>
+                        </div>
+                        <small>DOTS</small>
+                    </button>
+
+                    <button
+                        class="style-button"
+                        data-value="rounded"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-rounded"></span>
+                            <span class="mini-rounded"></span>
+                            <span class="mini-rounded"></span>
+                            <span class="mini-rounded"></span>
+                        </div>
+                        <small>ROUNDED</small>
+                    </button>
+
+                    <button
+                        class="style-button"
+                        data-value="classy"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-square"></span>
+                            <span class="mini-rounded"></span>
+                            <span class="mini-square"></span>
+                            <span class="mini-rounded"></span>
+                        </div>
+                        <small>CLASSY</small>
+                    </button>
+
+                    <button
+                        class="style-button"
+                        data-value="classy-rounded"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-rounded"></span>
+                            <span class="mini-dot"></span>
+                            <span class="mini-rounded"></span>
+                            <span class="mini-dot"></span>
+                        </div>
+                        <small>CLASSY+</small>
+                    </button>
+
+                    <button
+                        class="style-button"
+                        data-value="extra-rounded"
+                    >
+                        <div class="style-preview">
+                            <span class="mini-dot"></span>
+                            <span class="mini-rounded"></span>
+                            <span class="mini-dot"></span>
+                            <span class="mini-rounded"></span>
+                        </div>
+                        <small>EXTRA</small>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- CORNER SQUARE -->
+
+            <div class="group">
+
+                <label class="label">
+                    CORNER SQUARE MODEL
+                </label>
+
+                <select
+                    class="field"
+                    id="cornerSquare"
+                >
+
+                    <option value="square">
+                        Square
+                    </option>
+
+                    <option value="dot">
+                        Dot
+                    </option>
+
+                    <option value="extra-rounded">
+                        Extra Rounded
+                    </option>
+
+                    <option value="rounded">
+                        Rounded
+                    </option>
+
+                    <option value="dots">
+                        Dots
+                    </option>
+
+                    <option value="classy">
+                        Classy
+                    </option>
+
+                    <option value="classy-rounded">
+                        Classy Rounded
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- CORNER DOT -->
+
+            <div class="group">
+
+                <label class="label">
+                    CORNER DOT MODEL
+                </label>
+
+                <select
+                    class="field"
+                    id="cornerDot"
+                >
+
+                    <option value="square">
+                        Square
+                    </option>
+
+                    <option value="dot" selected>
+                        Dot
+                    </option>
+
+                    <option value="rounded">
+                        Rounded
+                    </option>
+
+                    <option value="dots">
+                        Dots
+                    </option>
+
+                    <option value="extra-rounded">
+                        Extra Rounded
+                    </option>
+
+                    <option value="classy">
+                        Classy
+                    </option>
+
+                    <option value="classy-rounded">
+                        Classy Rounded
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- SIZE -->
+
+            <div class="group">
+
+                <label class="label">
+                    SIZE
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="qrSize"
+                        min="180"
+                        max="700"
+                        value="360"
+                    >
+
+                    <div
+                        class="range-value"
+                        id="qrSizeValue"
+                    >
+                        360px
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- MARGIN -->
+
+            <div class="group">
+
+                <label class="label">
+                    MARGIN
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="qrMargin"
+                        min="0"
+                        max="40"
+                        value="8"
+                    >
+
+                    <div
+                        class="range-value"
+                        id="qrMarginValue"
+                    >
+                        8px
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- IMAGE -->
+
+            <div class="group">
+
+                <label class="label">
+                    CENTER IMAGE
+                </label>
+
+                <label
+                    class="upload"
+                    for="imageInput"
+                >
+
+                    <strong>
+                        UPLOAD IMAGE
+                    </strong>
+
+                    <span>
+                        PNG • JPG • WEBP
+                    </span>
+
+                </label>
+
+                <input
+                    type="file"
+                    id="imageInput"
+                    accept="image/png,image/jpeg,image/webp"
+                >
+
+                <div class="image-actions">
+
+                    <button
+                        id="removeImage"
+                    >
+                        REMOVE IMAGE
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- IMAGE SIZE -->
+
+            <div
+                class="group"
+                id="imageSizeGroup"
+            >
+
+                <label class="label">
+                    CENTER IMAGE SIZE
+                </label>
+
+                <div class="range-row">
+
+                    <input
+                        type="range"
+                        id="imageSize"
+                        min="0.15"
+                        max="0.45"
+                        step="0.01"
+                        value="0.28"
+                    >
+
+                    <div
+                        class="range-value"
+                        id="imageSizeValue"
+                    >
+                        28%
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ERROR CORRECTION -->
+
+            <div class="group">
+
+                <label class="label">
+                    ERROR CORRECTION
+                </label>
+
+                <select
+                    class="field"
+                    id="errorCorrection"
+                >
+
+                    <option value="L">
+                        L • 7%
+                    </option>
+
+                    <option value="M">
+                        M • 15%
+                    </option>
+
+                    <option value="Q">
+                        Q • 25%
+                    </option>
+
+                    <option value="H" selected>
+                        H • 30%
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- HIDE DOTS -->
+
+            <div class="group">
+
+                <div class="toggle-row">
+
+                    <div class="toggle-info">
+
+                        <strong>
+                            Hide dots behind image
+                        </strong>
+
+                        <span>
+                            Cleaner logo area
+                        </span>
+
+                    </div>
+
+                    <div
+                        class="switch on"
+                        id="hideDotsSwitch"
+                    ></div>
+
+                </div>
+
+            </div>
+
+            <!-- PRESETS -->
+
+            <div class="group">
+
+                <label class="label">
+                    QUICK PRESETS
+                </label>
+
+                <div class="presets">
+
+                    <button
+                        class="preset"
+                        style="
+                            background:
+                                linear-gradient(
+                                    135deg,
+                                    #08080f,
+                                    #08080f
+                                );
+                        "
+                        data-qrc="#08080F"
+                        data-bg="#FFFFFF"
+                    ></button>
+
+                    <button
+                        class="preset"
+                        style="
+                            background:
+                                linear-gradient(
+                                    135deg,
+                                    #00eaff,
+                                    #7b5cff
+                                );
+                        "
+                        data-qrc="#00EAFF"
+                        data-bg="#05060B"
+                    ></button>
+
+                    <button
+                        class="preset"
+                        style="
+                            background:
+                                linear-gradient(
+                                    135deg,
+                                    #ff008c,
+                                    #ff4d4d
+                                );
+                        "
+                        data-qrc="#FF008C"
+                        data-bg="#FFF4FA"
+                    ></button>
+
+                    <button
+                        class="preset"
+                        style="
+                            background:
+                                linear-gradient(
+                                    135deg,
+                                    #74ff9d,
+                                    #00c8a0
+                                );
+                        "
+                        data-qrc="#2A8C64"
+                        data-bg="#F4FFF9"
+                    ></button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =====================================================
+         PREVIEW
+    ====================================================== -->
+
+    <section class="panel preview-panel">
+
+        <div class="panel-title">
+            LIVE PREVIEW
+        </div>
+
+        <div class="preview-area">
+
+            <div class="preview-box">
+
+                <div class="preview-glow"></div>
+
+                <div id="qrPreview"></div>
+
+            </div>
+
+            <div class="preview-bottom">
+
+                <button
+                    class="big-button"
+                    id="downloadPNG"
+                >
+                    DOWNLOAD PNG
+                </button>
+
+                <button
+                    class="secondary-button"
+                    id="resetButton"
+                >
+                    RESET
+                </button>
+
+            </div>
+
+            <div
+                class="status ready"
+                id="status"
+            >
+                QR READY
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    MADE BY <span>KIANMEHR_WEB_MAKER</span>
+</footer>
+
+<script>
+/* =========================================================
+   QR//FORGE ENGINE
+========================================================= */
+
+const preview =
+    document.getElementById(
+        "qrPreview"
+    );
+
+const qrData =
+    document.getElementById(
+        "qrData"
+    );
+
+const qrColor =
+    document.getElementById(
+        "qrColor"
+    );
+
+const qrColorText =
+    document.getElementById(
+        "qrColorText"
+    );
+
+const bgColor =
+    document.getElementById(
+        "bgColor"
+    );
+
+const bgColorText =
+    document.getElementById(
+        "bgColorText"
+    );
+
+const cornerSquare =
+    document.getElementById(
+        "cornerSquare"
+    );
+
+const cornerDot =
+    document.getElementById(
+        "cornerDot"
+    );
+
+const qrSize =
+    document.getElementById(
+        "qrSize"
+    );
+
+const qrSizeValue =
+    document.getElementById(
+        "qrSizeValue"
+    );
+
+const qrMargin =
+    document.getElementById(
+        "qrMargin"
+    );
+
+const qrMarginValue =
+    document.getElementById(
+        "qrMarginValue"
+    );
+
+const imageInput =
+    document.getElementById(
+        "imageInput"
+    );
+
+const removeImage =
+    document.getElementById(
+        "removeImage"
+    );
+
+const imageSize =
+    document.getElementById(
+        "imageSize"
+    );
+
+const imageSizeValue =
+    document.getElementById(
+        "imageSizeValue"
+    );
+
+const errorCorrection =
+    document.getElementById(
+        "errorCorrection"
+    );
+
+const hideDotsSwitch =
+    document.getElementById(
+        "hideDotsSwitch"
+    );
+
+const status =
+    document.getElementById(
+        "status"
+    );
+
+let dotStyle =
+    "square";
+
+let imageData =
+    "";
+
+let hideBackgroundDots =
+    true;
+
+/* =========================================================
+   CREATE QR
+========================================================= */
+
+const qrCode =
+    new QRCodeStyling({
+
+        width:360,
+
+        height:360,
+
+        type:"canvas",
+
+        data:qrData.value,
+
+        margin:8,
+
+        image:"",
+
+        qrOptions:{
+            errorCorrectionLevel:"H"
+        },
+
+        dotsOptions:{
+            color:"#08080F",
+            type:"square"
+        },
+
+        cornersSquareOptions:{
+            color:"#08080F",
+            type:"square"
+        },
+
+        cornersDotOptions:{
+            color:"#08080F",
+            type:"dot"
+        },
+
+        backgroundOptions:{
+            color:"#FFFFFF"
+        },
+
+        imageOptions:{
+            hideBackgroundDots:true,
+            imageSize:.28,
+            margin:4,
+            crossOrigin:"anonymous",
+            saveAsBlob:true
+        }
+
+    });
+
+qrCode.append(
+    preview
+);
+
+/* =========================================================
+   UPDATE QR
+========================================================= */
+
+function updateQR(){
+
+    const size =
+        Number(
+            qrSize.value
+        );
+
+    const margin =
+        Number(
+            qrMargin.value
+        );
+
+    qrSizeValue.textContent =
+        size + "px";
+
+    qrMarginValue.textContent =
+        margin + "px";
+
+    imageSizeValue.textContent =
+        Math.round(
+            Number(
+                imageSize.value
+            ) * 100
+        ) + "%";
+
+    qrCode.update({
+
+        width:size,
+
+        height:size,
+
+        data:
+            qrData.value.trim() ||
+            "QR//FORGE",
+
+        margin:margin,
+
+        image:imageData || "",
+
+        qrOptions:{
+            errorCorrectionLevel:
+                errorCorrection.value
+        },
+
+        dotsOptions:{
+            color:
+                qrColor.value,
+
+            type:
+                dotStyle
+        },
+
+        cornersSquareOptions:{
+            color:
+                qrColor.value,
+
+            type:
+                cornerSquare.value
+        },
+
+        cornersDotOptions:{
+            color:
+                qrColor.value,
+
+            type:
+                cornerDot.value
+        },
+
+        backgroundOptions:{
+            color:
+                bgColor.value
+        },
+
+        imageOptions:{
+            hideBackgroundDots:
+                hideBackgroundDots,
+
+            imageSize:
+                Number(
+                    imageSize.value
+                ),
+
+            margin:4,
+
+            crossOrigin:
+                "anonymous",
+
+            saveAsBlob:true
+        }
+
+    });
+
+    status.textContent =
+        "QR READY";
+
+    status.className =
+        "status ready";
+}
+
+/* =========================================================
+   LIVE TEXT INPUT
+========================================================= */
+
+qrData.addEventListener(
+    "input",
+    updateQR
+);
+
+/* =========================================================
+   STYLE BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        "#dotStyles .style-button"
+    )
+    .forEach(
+        button=>{
+
+            button.addEventListener(
+                "click",
+                ()=>{
+
+                    document
+                        .querySelectorAll(
+                            "#dotStyles .style-button"
+                        )
+                        .forEach(
+                            item=>{
+                                item.classList.remove(
+                                    "active"
+                                );
+                            }
+                        );
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                    dotStyle =
+                        button.dataset.value;
+
+                    updateQR();
+                }
+            );
+        }
+    );
+
+/* =========================================================
+   COLOR SYNC
+========================================================= */
+
+qrColor.addEventListener(
+    "input",
+    ()=>{
+
+        qrColorText.value =
+            qrColor.value;
+
+        updateQR();
+    }
+);
+
+qrColorText.addEventListener(
+    "input",
+    ()=>{
+
+        if(
+            /^#[0-9A-Fa-f]{6}$/.test(
+                qrColorText.value
+            )
+        ){
+
+            qrColor.value =
+                qrColorText.value;
+
+            updateQR();
+        }
+    }
+);
+
+bgColor.addEventListener(
+    "input",
+    ()=>{
+
+        bgColorText.value =
+            bgColor.value;
+
+        updateQR();
+    }
+);
+
+bgColorText.addEventListener(
+    "input",
+    ()=>{
+
+        if(
+            /^#[0-9A-Fa-f]{6}$/.test(
+                bgColorText.value
+            )
+        ){
+
+            bgColor.value =
+                bgColorText.value;
+
+            updateQR();
+        }
+    }
+);
+
+/* =========================================================
+   SELECTS
+========================================================= */
+
+cornerSquare.addEventListener(
+    "change",
+    updateQR
+);
+
+cornerDot.addEventListener(
+    "change",
+    updateQR
+);
+
+errorCorrection.addEventListener(
+    "change",
+    updateQR
+);
+
+/* =========================================================
+   RANGES
+========================================================= */
+
+qrSize.addEventListener(
+    "input",
+    updateQR
+);
+
+qrMargin.addEventListener(
+    "input",
+    updateQR
+);
+
+imageSize.addEventListener(
+    "input",
+    updateQR
+);
+
+/* =========================================================
+   IMAGE UPLOAD
+========================================================= */
+
+imageInput.addEventListener(
+    "change",
+    event=>{
+
+        const file =
+            event.target.files[0];
+
+        if(!file)
+            return;
+
+        if(
+            !file.type.startsWith(
+                "image/"
+            )
+        ){
+
+            status.textContent =
+                "INVALID IMAGE";
+
+            status.className =
+                "status error";
+
+            return;
+        }
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            event=>{
+
+                imageData =
+                    event.target.result;
+
+                updateQR();
+
+                status.textContent =
+                    "IMAGE ADDED";
+
+                status.className =
+                    "status ready";
+            };
+
+        reader.onerror =
+            ()=>{
+
+                status.textContent =
+                    "IMAGE ERROR";
+
+                status.className =
+                    "status error";
+            };
+
+        reader.readAsDataURL(
+            file
+        );
+    }
+);
+
+/* =========================================================
+   REMOVE IMAGE
+========================================================= */
+
+removeImage.addEventListener(
+    "click",
+    ()=>{
+
+        imageData =
+            "";
+
+        imageInput.value =
+            "";
+
+        updateQR();
+
+        status.textContent =
+            "IMAGE REMOVED";
+
+        status.className =
+            "status ready";
+    }
+);
+
+/* =========================================================
+   HIDE DOTS TOGGLE
+========================================================= */
+
+hideDotsSwitch.addEventListener(
+    "click",
+    ()=>{
+
+        hideBackgroundDots =
+            !hideBackgroundDots;
+
+        hideDotsSwitch.classList.toggle(
+            "on",
+            hideBackgroundDots
+        );
+
+        updateQR();
+    }
+);
+
+/* =========================================================
+   PRESETS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".preset"
+    )
+    .forEach(
+        preset=>{
+
+            preset.addEventListener(
+                "click",
+                ()=>{
+
+                    const qrc =
+                        preset.dataset.qrc;
+
+                    const bg =
+                        preset.dataset.bg;
+
+                    qrColor.value =
+                        qrc;
+
+                    qrColorText.value =
+                        qrc;
+
+                    bgColor.value =
+                        bg;
+
+                    bgColorText.value =
+                        bg;
+
+                    updateQR();
+                }
+            );
+        }
+    );
+
+/* =========================================================
+   DOWNLOAD PNG
+========================================================= */
+
+document
+    .getElementById(
+        "downloadPNG"
+    )
+    .addEventListener(
+        "click",
+        async()=>{
+
+            const button =
+                document.getElementById(
+                    "downloadPNG"
+                );
+
+            const oldText =
+                button.textContent;
+
+            button.textContent =
+                "CREATING PNG...";
+
+            try{
+
+                await qrCode.download({
+
+                    name:
+                        "kianmehr-qr",
+
+                    extension:
+                        "png"
+
+                });
+
+                status.textContent =
+                    "PNG DOWNLOADED";
+
+                status.className =
+                    "status ready";
+
+            }catch(error){
+
+                console.error(
+                    error
+                );
+
+                status.textContent =
+                    "DOWNLOAD ERROR";
+
+                status.className =
+                    "status error";
+            }
+
+            button.textContent =
+                oldText;
+        }
+    );
+
+/* =========================================================
+   RESET
+========================================================= */
+
+document
+    .getElementById(
+        "resetButton"
+    )
+    .addEventListener(
+        "click",
+        ()=>{
+
+            qrData.value =
+                "https://kianmehr.github.io/";
+
+            qrColor.value =
+                "#08080F";
+
+            qrColorText.value =
+                "#08080F";
+
+            bgColor.value =
+                "#FFFFFF";
+
+            bgColorText.value =
+                "#FFFFFF";
+
+            cornerSquare.value =
+                "square";
+
+            cornerDot.value =
+                "dot";
+
+            qrSize.value =
+                "360";
+
+            qrMargin.value =
+                "8";
+
+            imageSize.value =
+                ".28";
+
+            errorCorrection.value =
+                "H";
+
+            imageData =
+                "";
+
+            imageInput.value =
+                "";
+
+            hideBackgroundDots =
+                true;
+
+            hideDotsSwitch.classList.add(
+                "on"
+            );
+
+            dotStyle =
+                "square";
+
+            document
+                .querySelectorAll(
+                    "#dotStyles .style-button"
+                )
+                .forEach(
+                    item=>{
+                        item.classList.toggle(
+                            "active",
+                            item.dataset.value ===
+                            "square"
+                        );
+                    }
+                );
+
+            updateQR();
+
+            status.textContent =
+                "RESET COMPLETE";
+
+            status.className =
+                "status ready";
+        }
+    );
+
+/* =========================================================
+   KEYBOARD SHORTCUT
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event=>{
+
+        if(
+            event.ctrlKey &&
+            event.key.toLowerCase() ===
+            "s"
+        ){
+
+            event.preventDefault();
+
+            document
+                .getElementById(
+                    "downloadPNG"
+                )
+                .click();
+        }
+    }
+);
+
+/* =========================================================
+   INITIAL
+========================================================= */
+
+updateQR();
+
+</script>
+
+</body>
+</html>
